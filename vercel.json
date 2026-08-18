@@ -1,12 +1,5 @@
 {
   "buildCommand": "pip install -r requirements.txt",
-  "env": {
-    "SUPABASE_DB_HOST": "db.vouzslwwrhiqqtnahdsu.supabase.co",
-    "SUPABASE_DB_PORT": "5432",
-    "SUPABASE_DB_NAME": "postgres",
-    "SUPABASE_DB_USER": "postgres",
-    "SUPABASE_DB_PASSWORD": "MTFBXcscO5mtQJW5"
-  },
   "functions": {
     "api_fixcellgt.py": {
       "runtime": "python3.11"
