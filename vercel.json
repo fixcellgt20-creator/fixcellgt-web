@@ -1,0 +1,15 @@
+{
+  "buildCommand": "pip install -r requirements.txt",
+  "env": {
+    "SUPABASE_DB_HOST": "@SUPABASE_DB_HOST",
+    "SUPABASE_DB_PORT": "@SUPABASE_DB_PORT",
+    "SUPABASE_DB_NAME": "@SUPABASE_DB_NAME",
+    "SUPABASE_DB_USER": "@SUPABASE_DB_USER",
+    "SUPABASE_DB_PASSWORD": "@SUPABASE_DB_PASSWORD"
+  },
+  "functions": {
+    "api_fixcellgt.py": {
+      "runtime": "python3.11"
+    }
+  }
+}
