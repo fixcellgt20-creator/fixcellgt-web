@@ -17,3 +17,7 @@ venv
 csv_output
 .idea
 .vscode
+api/
+build.sh
+requirements.txt
+*.py

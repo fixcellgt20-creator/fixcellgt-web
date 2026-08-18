@@ -1,9 +1,3 @@
 {
-  "buildCommand": "bash build.sh",
-  "functions": {
-    "api/index.py": {
-      "runtime": "python3.11"
-    }
-  },
   "public": "."
 }
