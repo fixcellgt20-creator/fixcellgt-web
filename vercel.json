@@ -1,0 +1,13 @@
+{
+  "buildCommand": "pip install --no-cache-dir -r requirements.txt",
+  "installCommand": "pip install -r requirements.txt",
+  "env": {
+    "PIP_DISABLE_PIP_VERSION_CHECK": "1"
+  },
+  "functions": {
+    "api/index.py": {
+      "runtime": "python3.11"
+    }
+  },
+  "public": "."
+}
