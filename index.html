@@ -430,9 +430,19 @@
                 if (precioMin) params.append('precio_min', precioMin);
                 if (precioMax) params.append('precio_max', precioMax);
 
-                const response = await fetch(`${API_URL}/inventario/buscar?${params}`);
-                datosGlobales = await response.json();
-
+            const response = await fetch(`${API_URL}/inventario/buscar`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+            marca: marca || null,
+            modelo: modelo || null,
+            repuesto: repuesto || null,
+            calidad: calidad || null,
+            precioMin: precioMin || 0,
+            precioMax: precioMax || 10000
+            })
+            });
+            
                 mostrarResultados(datosGlobales);
             } catch (error) {
                 mostrarError('Error en la búsqueda: ' + error.message);
