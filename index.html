@@ -422,27 +422,21 @@
             mostrarLoading();
 
             try {
-                const params = new URLSearchParams();
-                if (marca) params.append('marca', marca);
-                if (modelo) params.append('modelo', modelo);
-                if (repuesto) params.append('repuesto', repuesto);
-                if (calidad) params.append('calidad', calidad);
-                if (precioMin) params.append('precio_min', precioMin);
-                if (precioMax) params.append('precio_max', precioMax);
+                const response = await fetch(`${API_URL}/inventario/buscar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        marca: marca || null,
+                        modelo: modelo || null,
+                        repuesto: repuesto || null,
+                        calidad: calidad || null,
+                        precioMin: precioMin || 0,
+                        precioMax: precioMax || 10000
+                    })
+                });
 
-            const response = await fetch(`${API_URL}/inventario/buscar`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-            marca: marca || null,
-            modelo: modelo || null,
-            repuesto: repuesto || null,
-            calidad: calidad || null,
-            precioMin: precioMin || 0,
-            precioMax: precioMax || 10000
-            })
-            });
-
+                const data = await response.json();
+                datosGlobales = data;
                 mostrarResultados(datosGlobales);
             } catch (error) {
                 mostrarError('Error en la búsqueda: ' + error.message);
@@ -475,11 +469,9 @@
                                 <th>Modelo</th>
                                 <th>Repuesto</th>
                                 <th>Calidad</th>
-                                <th>Color</th>
-                                <th>Precio Mayorista</th>
-                                <th>Precio Reparación</th>
-                                <th>Margen</th>
-                                <th>Cantidad</th>
+                                <th>Descripción</th>
+                                <th>Precio</th>
+                                <th>Stock</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -492,11 +484,9 @@
                         <td>${item.modelo}</td>
                         <td>${item.repuesto}</td>
                         <td>${item.calidad}</td>
-                        <td>${item.color}</td>
-                        <td class="price-cell">Q${parseFloat(item.precio_base).toFixed(2)}</td>
-                        <td class="price-cell">Q${parseFloat(item.precio_reparacion).toFixed(2)}</td>
-                        <td class="margin-cell">Q${parseFloat(item.margen).toFixed(2)}</td>
-                        <td>${item.cantidad}</td>
+                        <td>${item.description || 'N/A'}</td>
+                        <td class="price-cell">Q${parseFloat(item.precio).toFixed(2)}</td>
+                        <td>${item.stock}</td>
                     </tr>
                 `;
             });
@@ -530,10 +520,10 @@
                 return;
             }
 
-            let csv = 'Marca,Modelo,Repuesto,Calidad,Color,Precio Mayorista,Precio Reparación,Margen,Cantidad\n';
+            let csv = 'Marca,Modelo,Repuesto,Calidad,Descripción,Precio,Stock\n';
 
             datosGlobales.forEach(item => {
-                csv += `"${item.marca}","${item.modelo}","${item.repuesto}","${item.calidad}","${item.color}",${item.precio_base},${item.precio_reparacion},${item.margen},${item.cantidad}\n`;
+                csv += `"${item.marca}","${item.modelo}","${item.repuesto}","${item.calidad}","${item.description || 'N/A'}",${item.precio},${item.stock}\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv' });
