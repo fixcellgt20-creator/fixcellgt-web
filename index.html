@@ -113,6 +113,32 @@
             transform: translateY(-2px);
         }
 
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-cta-login {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--primary);
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 300ms;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-cta-login:hover {
+            background: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 212, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -720,7 +746,10 @@
                 <a href="#proceso">Proceso</a>
                 <a href="#contacto">Contacto</a>
             </div>
-            <button class="nav-cta" onclick="window.open('https://wa.me/50254213113', '_blank')">📱 5421-3113</button>
+            <div class="nav-actions">
+                <a href="https://fixcellgt-sigma.vercel.app/" class="nav-cta-login">🔐 Login App</a>
+                <button class="nav-cta" onclick="window.open('https://wa.me/50254213113', '_blank')">📱 5421-3113</button>
+            </div>
         </div>
     </nav>
 
