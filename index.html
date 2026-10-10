@@ -39,7 +39,12 @@
 
         html {
             scroll-behavior: smooth;
+            font-size: 100%;
         }
+        /* en monitores grandes (22"+) todo escala junto con rem, en vez de quedar una columna angosta al centro */
+        @media (min-width: 1600px) { html { font-size: 112.5%; } }
+        @media (min-width: 2000px) { html { font-size: 125%; } }
+        @media (min-width: 2600px) { html { font-size: 150%; } }
 
         body {
             font-family: var(--font-body);
@@ -65,7 +70,7 @@
         }
 
         nav .container {
-            max-width: 1200px;
+            max-width: 82rem;
             margin: 0 auto;
             padding: 0 24px;
             display: flex;
@@ -80,7 +85,7 @@
         }
 
         .nav-logo img {
-            height: 45px;
+            height: 4rem;
             width: auto;
             object-fit: contain;
         }
@@ -94,7 +99,7 @@
         .nav-links a {
             color: var(--text-light);
             text-decoration: none;
-            font-size: 14px;
+            font-size: 0.875rem;
             font-weight: 500;
             transition: color 300ms;
         }
@@ -111,7 +116,7 @@
             font-weight: 600;
             border: none;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 0.875rem;
             transition: all 300ms;
         }
 
@@ -136,7 +141,7 @@
             font-weight: 600;
             border: 2px solid var(--primary);
             cursor: pointer;
-            font-size: 14px;
+            font-size: 0.875rem;
             transition: all 300ms;
             text-decoration: none;
             display: inline-block;
@@ -190,7 +195,7 @@
             background: linear-gradient(135deg, var(--secondary) 0%, var(--dark) 100%);
             padding: 40px 24px 80px 24px;
             text-align: center;
-            margin-top: 60px;
+            margin-top: calc(4rem + 32px);
             position: relative;
             overflow: hidden;
         }
@@ -209,23 +214,21 @@
         }
 
         .hero-content {
-            max-width: 800px;
+            max-width: 52rem;
             margin: 0 auto;
             position: relative;
-            z-index: 2;
         }
 
         .hero-logo-large {
             width: 100%;
-            max-width: 340px;
+            max-width: 32rem;
             height: auto;
             object-fit: contain;
             margin: 0 auto 32px;
-            filter: drop-shadow(0 16px 32px rgba(0, 212, 255, 0.2));
         }
 
         .hero h1 {
-            font-size: clamp(2.2rem, 5vw, 3.2rem);
+            font-size: clamp(2.2rem, 4.4vw, 3.8rem);
             font-family: var(--font-display);
             font-weight: 600;
             color: var(--primary);
@@ -235,11 +238,11 @@
         }
 
         .hero p {
-            font-size: 18px;
+            font-size: 1.125rem;
             color: var(--text-gray);
             margin-bottom: 40px;
             line-height: 1.6;
-            max-width: 560px;
+            max-width: 36rem;
             margin-left: auto;
             margin-right: auto;
         }
@@ -253,7 +256,7 @@
 
         .btn {
             padding: 16px 40px;
-            font-size: 16px;
+            font-size: 1rem;
             font-weight: 600;
             border-radius: 8px;
             border: none;
@@ -287,7 +290,7 @@
 
         @media (max-width: 768px) {
             .hero { padding: 30px 24px 60px 24px; }
-            .hero-logo-large { max-width: 220px; margin-bottom: 24px; }
+            .hero-logo-large { max-width: 18rem; margin-bottom: 24px; }
         }
 
         /* ============================================
@@ -311,17 +314,20 @@
         .gallery-section .subtitle {
             text-align: center;
             color: var(--ink-muted);
-            font-size: 17px;
+            font-size: 1.0625rem;
             margin-bottom: 56px;
         }
 
         .gallery-grid {
-            max-width: 1200px;
+            max-width: 82rem;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 28px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
         }
+
+        @media (min-width: 640px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); gap: 20px; } }
+        @media (min-width: 1100px) { .gallery-grid { grid-template-columns: repeat(6, 1fr); } }
 
         .gallery-item {
             position: relative;
@@ -347,7 +353,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 56px;
+            font-size: 2.75rem;
             color: rgba(0, 134, 168, 0.35);
         }
 
@@ -369,15 +375,15 @@
 
         .gallery-item-overlay h3 {
             color: var(--primary);
-            font-size: 22px;
-            margin-bottom: 8px;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
             font-family: var(--font-display);
             font-weight: 600;
         }
 
         .gallery-item-overlay p {
             color: var(--text-light);
-            font-size: 14px;
+            font-size: 0.8rem;
         }
 
         /* ============================================
@@ -399,7 +405,7 @@
         }
 
         .services-container {
-            max-width: 1200px;
+            max-width: 82rem;
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -436,14 +442,14 @@
         .service-icon svg { width: 30px; height: 30px; }
 
         .service-item h3 {
-            font-size: 18px;
+            font-size: 1.125rem;
             font-weight: 600;
             color: var(--primary);
             font-family: var(--font-display);
         }
 
         .service-item p {
-            font-size: 14px;
+            font-size: 0.875rem;
             color: var(--text-gray);
             line-height: 1.6;
         }
@@ -458,7 +464,7 @@
         }
 
         .stats-container {
-            max-width: 1200px;
+            max-width: 82rem;
             margin: 0 auto;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -467,7 +473,7 @@
         }
 
         .stat-number {
-            font-size: 48px;
+            font-size: 3rem;
             font-weight: 700;
             font-family: var(--font-display);
             color: var(--primary-ink);
@@ -476,7 +482,7 @@
         }
 
         .stat-label {
-            font-size: 15px;
+            font-size: 0.9375rem;
             color: var(--secondary);
             font-weight: 600;
         }
@@ -521,7 +527,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 34px;
+            font-size: 2.125rem;
             font-weight: 700;
             font-family: var(--font-display);
             color: var(--secondary);
@@ -531,7 +537,7 @@
         }
 
         .step-content h3 {
-            font-size: 21px;
+            font-size: 1.3125rem;
             font-weight: 600;
             color: var(--primary);
             margin-bottom: 10px;
@@ -540,7 +546,7 @@
 
         .step-content p {
             color: var(--text-gray);
-            font-size: 15px;
+            font-size: 0.9375rem;
             line-height: 1.6;
         }
 
@@ -563,7 +569,7 @@
         }
 
         .contact-container {
-            max-width: 1200px;
+            max-width: 82rem;
             margin: 0 auto;
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -590,12 +596,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 1.625rem;
             flex-shrink: 0;
         }
 
         .contact-info-text h3 {
-            font-size: 17px;
+            font-size: 1.0625rem;
             font-weight: 600;
             color: var(--primary-ink);
             margin-bottom: 6px;
@@ -604,7 +610,7 @@
 
         .contact-info-text p, .contact-info-text a {
             color: var(--ink-muted);
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .contact-info-text a:hover { color: var(--primary-ink); }
@@ -630,7 +636,7 @@
             color: var(--primary);
             font-weight: 600;
             margin-bottom: 8px;
-            font-size: 14px;
+            font-size: 0.875rem;
         }
 
         .form-group input,
@@ -642,7 +648,7 @@
             color: var(--text-light);
             border-radius: 8px;
             font-family: var(--font-body);
-            font-size: 14px;
+            font-size: 0.875rem;
             transition: all 250ms;
         }
 
@@ -667,7 +673,7 @@
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 15px;
+            font-size: 0.9375rem;
             transition: all 250ms;
         }
 
@@ -693,7 +699,7 @@
             color: var(--text-gray);
         }
 
-        footer p { font-size: 14px; margin-bottom: 10px; }
+        footer p { font-size: 0.875rem; margin-bottom: 10px; }
 
         /* ============================================
            RESPONSIVE
@@ -701,13 +707,14 @@
 
         @media (max-width: 768px) {
             .process-step { grid-template-columns: 64px 1fr; gap: 18px; }
-            .step-number { width: 64px; height: 64px; font-size: 26px; }
+            .step-number { width: 64px; height: 64px; font-size: 1.625rem; }
         }
 
         @media (max-width: 480px) {
             nav .container { padding: 0 16px; }
-            .nav-cta { font-size: 12px; padding: 8px 16px; }
-            .hero { padding: 60px 16px; }
+            .nav-cta { font-size: 0.75rem; padding: 8px 16px; }
+            .hero { padding: 60px 16px; margin-top: calc(3rem + 32px); }
+            .nav-logo img { height: 3rem; }
         }
     </style>
 </head>
@@ -715,7 +722,7 @@
     <!-- NAVIGATION -->
     <nav>
         <div class="container">
-            <div class="nav-logo"><img src="images/logo.jpg" alt="FixCellGt"></div>
+            <div class="nav-logo"><img src="images/logo-crop.png" alt="FixCellGt" width="1200" height="481"></div>
             <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
@@ -735,7 +742,7 @@
     <!-- HERO SECTION -->
     <section class="hero">
         <div class="hero-content">
-            <img src="images/logo.jpg" alt="FixCellGt" class="hero-logo-large">
+            <img src="images/logo-crop.png" alt="FixCellGt" class="hero-logo-large" width="1200" height="481">
             <h1>Expertos en Reparación</h1>
             <p>Diagnóstico y reparación de dispositivos electrónicos con garantía oficial y servicio de calidad.</p>
             <div class="hero-buttons">
