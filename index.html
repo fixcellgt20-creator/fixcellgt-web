@@ -15,6 +15,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Hanken+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<script>
+  /* si la persona pidió reducir el movimiento (o no hay IntersectionObserver) no se activa nada: todo queda visible y quieto */
+  if (window.matchMedia('(prefers-reduced-motion: no-preference)').matches && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('js-anim');
+  }
+</script>
 <style>
   :root{
     --black:#000000;
@@ -113,8 +119,9 @@
   .hero{padding:3rem 0 5rem}
   .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2rem;align-items:center}
   .hero h1{margin-bottom:1.8rem}
-  .hero h1 span{display:block}
-  .hero h1 .l2{padding-top:.06em}
+  /* cada línea es una máscara: el relleno extra deja espacio al acento (Ó) y el margen negativo mantiene el espaciado */
+  .hero h1 .ln{display:block;overflow:hidden;padding:.16em 0 .03em;margin:-.16em 0 -.03em}
+  .hero h1 .ln i{display:block;font-style:normal}
   .hero .lede{margin-bottom:2rem}
   .actions{display:flex;flex-wrap:wrap;align-items:center;gap:.8rem 1rem}
   .new{display:inline-flex;align-items:center;gap:.7rem;margin-top:1.8rem;text-decoration:none}
@@ -146,14 +153,12 @@
   /* servicios */
   .sec-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:1rem 2rem;margin-bottom:2.5rem}
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-  .card{background:var(--white);border-radius:32px;padding:1.75rem;display:flex;flex-direction:column;min-height:15rem}
+  .card{--bg:#fff;--fg:#000;--mut:var(--slate);--ic:#000;background:var(--bg);color:var(--fg);transition:background-color .3s ease,color .3s ease;border-radius:32px;padding:1.75rem;display:flex;flex-direction:column;min-height:15rem}
   .card .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:auto}
-  .card svg.ic{width:2.4rem;height:2.4rem;stroke:var(--black);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .card svg.ic{width:2.4rem;height:2.4rem;stroke:var(--ic);transition:stroke .3s ease;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
   .card h3{font-size:1.6rem;text-transform:uppercase;margin:2.5rem 0 .6rem}
-  .card p{font-size:1rem;color:var(--slate)}
-  .card.inv{background:var(--black);color:var(--white)}
-  .card.inv svg.ic{stroke:var(--cyan)}
-  .card.inv p{color:var(--smoke)}
+  .card p{font-size:1rem;color:var(--mut);transition:color .3s ease}
+  .card.inv{--bg:#000;--fg:#fff;--mut:var(--smoke);--ic:var(--cyan)}
   @media (max-width:1000px){ .cards{grid-template-columns:repeat(2,1fr)} }
   @media (max-width:620px){ .cards{grid-template-columns:1fr} .card{min-height:0} }
 
@@ -250,6 +255,44 @@
 
   .wa-fab{position:fixed;right:1.2rem;bottom:1.2rem;z-index:60;width:3.5rem;height:3.5rem;border-radius:50%;background:#25D366;color:var(--black);display:flex;align-items:center;justify-content:center;transition:transform .15s ease}
   .wa-fab:hover{transform:scale(1.06)}
+
+  /* ============ MOVIMIENTO ============ */
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+  /* tarjetas de servicios: se invierten al pasar el mouse (solo dispositivos con mouse) */
+  @media (hover:hover){
+    .card:hover{--bg:#000;--fg:#fff;--mut:var(--smoke);--ic:var(--cyan)}
+    .card.inv:hover{--bg:#fff;--fg:#000;--mut:var(--slate);--ic:#000}
+  }
+
+  /* aparición al hacer scroll (solo si hay movimiento permitido: la clase js-anim la pone el script del <head>) */
+  .js-anim .reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0ms)}
+  .js-anim .reveal.in{opacity:1;transform:none}
+  .js-anim .card.reveal{transition:opacity .7s ease,transform .8s cubic-bezier(.2,.8,.2,1),background-color .3s ease,color .3s ease;transition-delay:var(--d,0ms),var(--d,0ms),0s,0s}
+
+  /* tarjeta de rastreo: la barra se llena y los puntos se encienden en orden */
+  .progress::after{content:"";position:absolute;left:10%;width:40%;top:.5rem;height:2px;background:var(--black);transform-origin:left;transition:transform 1.2s cubic-bezier(.2,.8,.2,1) .5s}
+  .progress li::before{transition:background-color .4s ease,border-color .4s ease}
+  .progress li:nth-child(1)::before{transition-delay:.4s}
+  .progress li:nth-child(2)::before{transition-delay:.9s}
+  .progress li:nth-child(3)::before{transition-delay:1.4s}
+  .js-anim .ticket:not(.in) .progress::after{transform:scaleX(0)}
+  .js-anim .ticket:not(.in) .progress li.done::before,
+  .js-anim .ticket:not(.in) .progress li.now::before{background:var(--mist);border-color:var(--ash)}
+
+  /* carga inicial del hero: titular por líneas, texto y botones en cascada, cubos que caen y flotan */
+  @keyframes rise{from{transform:translateY(112%)}to{transform:none}}
+  @keyframes fade-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  @keyframes cube-drop{from{opacity:0;transform:translateY(-64px)}to{opacity:1;transform:none}}
+  @keyframes cube-float{from{transform:translateY(0)}to{transform:translateY(-8px)}}
+  @media (prefers-reduced-motion:no-preference){
+    .hero h1 .ln i{animation:rise 1s cubic-bezier(.2,.8,.2,1) both}
+    .hero h1 .ln:nth-child(2) i{animation-delay:.12s}
+    .hero .lede{animation:fade-up .8s ease .35s both}
+    .hero .actions{animation:fade-up .8s ease .5s both}
+    .hero .new{animation:fade-up .8s ease .65s both}
+    .cube{animation:cube-drop .9s cubic-bezier(.2,.8,.2,1) var(--d,0s) both,cube-float var(--f,6s) ease-in-out calc(var(--d,0s) + 1s) infinite alternate}
+  }
 </style>
 </head>
 <body>
@@ -281,7 +324,7 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <h1 class="display"><span>Expertos en</span><span class="l2">reparación</span></h1>
+      <h1 class="display"><span class="ln"><i>Expertos en</i></span><span class="ln"><i>reparación</i></span></h1>
       <p class="lede">Diagnóstico y reparación de dispositivos electrónicos con garantía oficial y servicio de calidad.</p>
       <div class="actions">
         <a class="btn" href="https://wa.me/50254213113?text=Hola%20FixCellGt%2C%20necesito%20una%20reparaci%C3%B3n" target="_blank" rel="noopener">Contactar ahora</a>
@@ -292,32 +335,36 @@
 
     <figure class="object" aria-hidden="true">
       <svg viewBox="0 0 560 500" font-family="JetBrains Mono, monospace">
-        <!-- cubo amarillo (atrás) -->
+        <g class="cube" style="--d:.5s;--f:4.6s">
         <path d="M400 92L456 120L400 148L344 120Z" fill="#FFE45C"/>
         <path d="M344 120L400 148L400 204L344 176Z" fill="#E6BE00"/>
         <path d="M456 120L400 148L400 204L456 176Z" fill="#BF9D00"/>
         <g transform="matrix(2.3333 -1.1667 2.3333 1.1667 344 120)"><g transform="translate(4.8 4.8) scale(.6)" fill="none" stroke="#000" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="8" width="20" height="9" rx="4"/><path d="M6.5 10.5v4M4.5 12.5h4"/><circle cx="16" cy="11.5" r="1"/><circle cx="18.5" cy="13.5" r="1"/></g></g>
 
-        <!-- cubo negro grande -->
+        </g>
+        <g class="cube" style="--d:0s;--f:6.4s">
         <path d="M280 180L390 235L280 290L170 235Z" fill="#2f2f2f"/>
         <path d="M170 235L280 290L280 410L170 355Z" fill="#000"/>
         <path d="M390 235L280 290L280 410L390 355Z" fill="#1b1b1b"/>
         <g transform="matrix(4.5833 -2.2917 4.5833 2.2917 170 235)"><g transform="translate(4.8 4.8) scale(.6)" fill="none" stroke="#00D4FF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></g></g>
         <g transform="translate(292 296) skewY(-26.565)"><text x="0" y="24" font-size="13" fill="#fff">SMARTPHONES</text></g>
 
-        <!-- cubo blanco -->
+        </g>
+        <g class="cube" style="--d:.18s;--f:5.2s">
         <path d="M420 285L510 330L420 375L330 330Z" fill="#ffffff"/>
         <path d="M330 330L420 375L420 475L330 430Z" fill="#d6d6d6"/>
         <path d="M510 330L420 375L420 475L510 430Z" fill="#b9b9b9"/>
         <g transform="matrix(3.75 -1.875 3.75 1.875 330 330)"><g transform="translate(4.8 4.8) scale(.6)" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a2 2 0 0 1 2-2h9.5l4.5 2v4l-4.5 2H5a2 2 0 0 1-2-2z"/><circle cx="9" cy="11" r="2"/><path d="M8 17v3M5 20h6"/></g></g>
         <g transform="translate(432 380) skewY(-26.565)"><text x="0" y="24" font-size="13" fill="#000">CCTV</text></g>
 
-        <!-- cubo cian (adelante) -->
+        </g>
+        <g class="cube" style="--d:.34s;--f:5.8s">
         <path d="M150 310L230 350L150 390L70 350Z" fill="#66E5FF"/>
         <path d="M70 350L150 390L150 480L70 440Z" fill="#00B8DD"/>
         <path d="M230 350L150 390L150 480L230 440Z" fill="#0092B0"/>
         <g transform="matrix(3.3333 -1.6667 3.3333 1.6667 70 350)"><g transform="translate(4.8 4.8) scale(.6)" fill="none" stroke="#000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16V6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5V16"/><path d="M2 16h20l-1.4 3a1.5 1.5 0 0 1-1.4 1H4.8a1.5 1.5 0 0 1-1.4-1z"/></g></g>
         <g transform="translate(160 394) skewY(-26.565)"><text x="0" y="22" font-size="12" fill="#000">LAPTOP</text></g>
+        </g>
       </svg>
     </figure>
   </div>
@@ -325,40 +372,40 @@
 
 <section class="arc on-black" aria-label="Cifras">
   <div class="wrap">
-    <div class="stats-grid">
-      <div class="stat"><div class="stat-num">500+</div><div class="stat-label">Reparaciones exitosas</div></div>
-      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Garantía oficial</div></div>
-      <div class="stat"><div class="stat-num">24h</div><div class="stat-label">Servicio express</div></div>
-      <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Calificación cliente</div></div>
+    <div class="stats-grid" data-stagger>
+      <div class="stat reveal"><div class="stat-num">500+</div><div class="stat-label">Reparaciones exitosas</div></div>
+      <div class="stat reveal"><div class="stat-num">100%</div><div class="stat-label">Garantía oficial</div></div>
+      <div class="stat reveal"><div class="stat-num">24h</div><div class="stat-label">Servicio express</div></div>
+      <div class="stat reveal"><div class="stat-num">5★</div><div class="stat-label">Calificación cliente</div></div>
     </div>
   </div>
 </section>
 
 <section id="servicios">
   <div class="wrap">
-    <div class="sec-head"><h2 class="display">Servicios especializados</h2></div>
-    <ul class="cards">
-      <li class="card">
+    <div class="sec-head reveal"><h2 class="display">Servicios especializados</h2></div>
+    <ul class="cards" data-stagger>
+      <li class="card reveal">
         <div class="top"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M10 18h4"/></svg><span class="tag">01</span></div>
         <h3>Smartphones</h3><p>Pantalla, batería, cámara, software y más para iPhone y Android.</p>
       </li>
-      <li class="card">
+      <li class="card reveal">
         <div class="top"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16V6.5A1.5 1.5 0 0 1 5.5 5h13A1.5 1.5 0 0 1 20 6.5V16"/><path d="M2 16h20l-1.4 3a1.5 1.5 0 0 1-1.4 1H4.8a1.5 1.5 0 0 1-1.4-1z"/></svg><span class="tag">02</span></div>
         <h3>Computadoras</h3><p>Reparación de laptop, desktop, SSD, RAM y problemas de hardware.</p>
       </li>
-      <li class="card inv">
+      <li class="card inv reveal">
         <div class="top"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="8" width="20" height="9" rx="4"/><path d="M6.5 10.5v4M4.5 12.5h4"/><circle cx="16" cy="11.5" r="1"/><circle cx="18.5" cy="13.5" r="1"/></svg><span class="tag">03</span></div>
         <h3>Consolas</h3><p>Xbox, PlayStation, Nintendo. Reparación de controles y accesorios.</p>
       </li>
-      <li class="card">
+      <li class="card reveal">
         <div class="top"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M10 18h4"/></svg><span class="tag">04</span></div>
         <h3>Tablets</h3><p>Reparación completa de tablets, pantalla y componentes internos.</p>
       </li>
-      <li class="card">
+      <li class="card reveal">
         <div class="top"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 8V4h10v4"/><rect x="5" y="8" width="14" height="8" rx="1.5"/><rect x="8" y="14" width="8" height="6"/></svg><span class="tag">05</span></div>
         <h3>Periféricos</h3><p>Impresoras, escáneres y otros dispositivos electrónicos.</p>
       </li>
-      <li class="card">
+      <li class="card reveal">
         <div class="top"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"/></svg><span class="tag">06</span></div>
         <h3>Mantenimiento</h3><p>Limpieza térmica, desinfección y mantenimiento preventivo.</p>
       </li>
@@ -368,7 +415,7 @@
 
 <section class="cams" id="camaras">
   <div class="wrap">
-    <div class="block on-black">
+    <div class="block on-black reveal">
       <div class="cams-grid">
         <div>
           <span class="tag tag-y">Cámaras de seguridad</span>
@@ -386,7 +433,7 @@
           <a class="btn btn-light" href="https://wa.me/50254213113?text=Hola%2C%20quiero%20cotizar%20c%C3%A1maras%20de%20seguridad" target="_blank" rel="noopener">Cotizar cámaras por WhatsApp</a>
         </div>
 
-        <figure class="live" aria-hidden="true">
+        <figure class="live reveal" style="--d:.2s" aria-hidden="true">
           <svg viewBox="0 0 400 540" font-family="Hanken Grotesk, sans-serif">
             <path d="M318 70a40 40 0 0 1 40 40M318 46a64 64 0 0 1 64 64" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round"/>
             <rect x="90" y="20" width="220" height="500" rx="34" fill="#fff" stroke="#000" stroke-width="2.4"/>
@@ -420,32 +467,32 @@
 
 <section id="galeria">
   <div class="wrap">
-    <div class="sec-head">
+    <div class="sec-head reveal">
       <h2 class="display">Nuestros trabajos</h2>
       <p class="lede">Galería de reparaciones realizadas con éxito</p>
     </div>
-    <ul class="cards">
-      <li class="work">
+    <ul class="cards" data-stagger>
+      <li class="work reveal">
         <div class="work-img"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="15" y="4" width="18" height="40" rx="4"/><path d="M21 38h6M19 14l5 6-3 5 4 6"/></svg></div>
         <div class="work-body"><span class="tag">Reparación</span><h3>Pantalla iPhone</h3><p>Reemplazo OLED original</p></div>
       </li>
-      <li class="work">
+      <li class="work reveal">
         <div class="work-img"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M9 32V12a2 2 0 0 1 2-2h26a2 2 0 0 1 2 2v20"/><path d="M5 32h38l-2.5 6a2 2 0 0 1-1.9 1.3H9.4A2 2 0 0 1 7.5 38z"/><path d="M16 22h4M28 22h4"/></svg></div>
         <div class="work-body"><span class="tag">Reparación</span><h3>Laptop Gaming</h3><p>Upgrade SSD + RAM</p></div>
       </li>
-      <li class="work">
+      <li class="work reveal">
         <div class="work-img"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="5" y="14" width="34" height="20" rx="4"/><path d="M43 21v6"/><path d="M23 18l-5 8h6l-3 7 9-10h-6l3-5z"/></svg></div>
         <div class="work-body"><span class="tag">Reparación</span><h3>Batería Samsung</h3><p>Reemplazo original</p></div>
       </li>
-      <li class="work">
+      <li class="work reveal">
         <div class="work-img"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="15" width="40" height="18" rx="9"/><path d="M14 20v8M10 24h8"/><circle cx="31" cy="22" r="1.6"/><circle cx="36" cy="26" r="1.6"/></svg></div>
         <div class="work-body"><span class="tag">Reparación</span><h3>Consola Xbox</h3><p>Reparación HDMI</p></div>
       </li>
-      <li class="work">
+      <li class="work reveal">
         <div class="work-img"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="10" width="36" height="28" rx="6"/><circle cx="24" cy="24" r="8"/><circle cx="24" cy="24" r="3"/><path d="M33 15h3"/></svg></div>
         <div class="work-body"><span class="tag">Reparación</span><h3>Cámara trasera</h3><p>Reemplazo módulo</p></div>
       </li>
-      <li class="work">
+      <li class="work reveal">
         <div class="work-img"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="4" y="12" width="40" height="24" rx="4"/><path d="M10 19h2M16 19h2M22 19h2M28 19h2M34 19h4M10 25h2M16 25h2M22 25h2M28 25h2M34 25h4M14 31h20"/></svg></div>
         <div class="work-body"><span class="tag">Reparación</span><h3>Teclado laptop</h3><p>Reemplazo mecánico</p></div>
       </li>
@@ -455,19 +502,19 @@
 
 <section id="proceso">
   <div class="wrap">
-    <div class="sec-head"><h2 class="display">Cómo funciona</h2></div>
-    <ol class="steps">
-      <li class="step"><div class="n">01</div><h3>Contacto</h3><p>Comunícate con nosotros vía WhatsApp. Describe el problema de tu dispositivo y te enviaremos un presupuesto rápido.</p></li>
-      <li class="step"><div class="n">02</div><h3>Diagnóstico</h3><p>Realizamos un análisis completo de tu dispositivo para identificar exactamente qué necesita reparación.</p></li>
-      <li class="step"><div class="n">03</div><h3>Reparación</h3><p>Ejecutamos la reparación con piezas de calidad original y técnica profesional certificada.</p></li>
-      <li class="step inv"><div class="n">04</div><h3>Entrega</h3><p>Tu dispositivo está listo con garantía oficial. Totalmente funcional y probado al 100%.</p></li>
+    <div class="sec-head reveal"><h2 class="display">Cómo funciona</h2></div>
+    <ol class="steps" data-stagger>
+      <li class="step reveal"><div class="n">01</div><h3>Contacto</h3><p>Comunícate con nosotros vía WhatsApp. Describe el problema de tu dispositivo y te enviaremos un presupuesto rápido.</p></li>
+      <li class="step reveal"><div class="n">02</div><h3>Diagnóstico</h3><p>Realizamos un análisis completo de tu dispositivo para identificar exactamente qué necesita reparación.</p></li>
+      <li class="step reveal"><div class="n">03</div><h3>Reparación</h3><p>Ejecutamos la reparación con piezas de calidad original y técnica profesional certificada.</p></li>
+      <li class="step inv reveal"><div class="n">04</div><h3>Entrega</h3><p>Tu dispositivo está listo con garantía oficial. Totalmente funcional y probado al 100%.</p></li>
     </ol>
   </div>
 </section>
 
 <section class="track" id="rastreo">
   <div class="wrap">
-    <div class="track-card">
+    <div class="track-card reveal">
       <div class="track-grid">
         <div>
           <span class="tag">Rastrear orden</span>
@@ -475,7 +522,7 @@
           <p class="lede">Consultá cómo va la reparación de tu equipo con tu número de orden y tu teléfono, cuando quieras.</p>
           <a class="btn" href="https://fixcellgt-sigma.vercel.app/rastreo/fixcellgt">Rastrear mi orden</a>
         </div>
-        <div class="ticket" aria-hidden="true">
+        <div class="ticket reveal" style="--d:.2s" aria-hidden="true">
           <div class="ticket-top"><span class="tag tag-y">Ejemplo</span></div>
           <div class="order">FIX-00792</div>
           <div class="dev">Samsung A54</div>
@@ -498,14 +545,14 @@
       <div>
         <span class="tag">Contacto</span>
         <h2 class="display">Contáctanos hoy</h2>
-        <dl class="info">
-          <div><dt>Teléfono / WhatsApp</dt><dd><a class="hl-y" style="color:#000" href="https://wa.me/50254213113">5421-3113</a></dd></div>
-          <div><dt>WhatsApp</dt><dd><a href="https://wa.me/50254213113" target="_blank" rel="noopener">Contactar por WhatsApp</a></dd></div>
-          <div><dt>Ubicación</dt><dd>1ra Calle 4-57, Zona 1<br>San José Pinula, Guatemala</dd></div>
-          <div><dt>Horario</dt><dd>Lunes - Sábado<br>9:00 - 19:00</dd></div>
+        <dl class="info" data-stagger>
+          <div class="reveal"><dt>Teléfono / WhatsApp</dt><dd><a class="hl-y" style="color:#000" href="https://wa.me/50254213113">5421-3113</a></dd></div>
+          <div class="reveal"><dt>WhatsApp</dt><dd><a href="https://wa.me/50254213113" target="_blank" rel="noopener">Contactar por WhatsApp</a></dd></div>
+          <div class="reveal"><dt>Ubicación</dt><dd>1ra Calle 4-57, Zona 1<br>San José Pinula, Guatemala</dd></div>
+          <div class="reveal"><dt>Horario</dt><dd>Lunes - Sábado<br>9:00 - 19:00</dd></div>
         </dl>
       </div>
-      <form class="form" onsubmit="handleFormSubmit(event)">
+      <form class="form reveal" style="--d:.15s" onsubmit="handleFormSubmit(event)">
         <div class="field"><label for="name">Tu nombre</label><input type="text" id="name" name="name" autocomplete="name" required></div>
         <div class="field"><label for="device">Dispositivo</label><input type="text" id="device" name="device" placeholder="iPhone 12, Samsung Galaxy..." required></div>
         <div class="field"><label for="problem">Describe tu problema</label><textarea id="problem" name="problem" required></textarea></div>
@@ -556,6 +603,52 @@
       menuToggle.setAttribute('aria-expanded', 'false');
     });
   });
+
+  /* movimiento: aparición al hacer scroll + contadores (solo si el <head> activó js-anim) */
+  (function () {
+    const root = document.documentElement;
+    if (!root.classList.contains('js-anim')) return;
+    try {
+      document.querySelectorAll('[data-stagger]').forEach((group) => {
+        [...group.children].forEach((child, i) => child.style.setProperty('--d', i * 90 + 'ms'));
+      });
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      const counters = [...document.querySelectorAll('.stat-num')].map((el) => {
+        const final = el.textContent.trim();
+        const m = final.match(/^(\d+)(.*)$/);
+        if (!m) return null;
+        el.innerHTML = '<span class="sr">' + final + '</span><span aria-hidden="true" class="cnt">0' + m[2] + '</span>';
+        return { out: el.querySelector('.cnt'), n: Number(m[1]), suffix: m[2], host: el.closest('.stat') };
+      }).filter(Boolean);
+
+      const cio = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          cio.unobserve(entry.target);
+          const c = counters.find((x) => x.host === entry.target);
+          const t0 = performance.now();
+          const tick = (now) => {
+            const p = Math.min((now - t0) / 1400, 1);
+            c.out.textContent = Math.round(c.n * (1 - Math.pow(1 - p, 3))) + c.suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        });
+      }, { threshold: 0.4 });
+      counters.forEach((c) => cio.observe(c.host));
+    } catch (err) {
+      root.classList.remove('js-anim');
+    }
+  })();
 </script>
 </body>
 </html>
