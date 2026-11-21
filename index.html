@@ -232,6 +232,11 @@
   .info dd{font-size:1.4rem;font-weight:500;line-height:1.3;margin-top:.25rem;letter-spacing:-.02em}
   .info a{text-decoration:none}
   .info a:hover{text-decoration:underline;text-underline-offset:4px}
+  /* redes sociales */
+  .social{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:.6rem;list-style:none}
+  .social a{width:2.9rem;height:2.9rem;border-radius:50%;border:1px solid var(--slate);display:flex;align-items:center;justify-content:center;color:var(--white);transition:background-color .25s ease,color .25s ease,border-color .25s ease}
+  .social a:hover,.social a:focus-visible{background:var(--cyan);border-color:var(--cyan);color:var(--black)}
+  .social svg{width:1.3rem;height:1.3rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
   .form{background:var(--white);color:var(--black);border-radius:32px;padding:2rem}
   .field{margin-bottom:1.2rem}
   .field label{display:block;font-family:var(--f-mono);font-weight:400;font-size:.8rem;letter-spacing:-.03em;color:var(--slate);margin-bottom:.45rem}
@@ -550,6 +555,14 @@
           <div class="reveal"><dt>WhatsApp</dt><dd><a href="https://wa.me/50254213113" target="_blank" rel="noopener">Contactar por WhatsApp</a></dd></div>
           <div class="reveal"><dt>Ubicación</dt><dd>1ra Calle 4-57, Zona 1<br>San José Pinula, Guatemala</dd></div>
           <div class="reveal"><dt>Horario</dt><dd>Lunes - Sábado<br>9:00 - 19:00</dd></div>
+          <div class="reveal"><dt>Síguenos</dt><dd>
+            <ul class="social">
+              <li><a href="https://facebook.com/fixcellgt" target="_blank" rel="noopener" aria-label="Facebook de FixCellGt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a></li>
+              <li><a href="https://instagram.com/fixcellgt" target="_blank" rel="noopener" aria-label="Instagram de FixCellGt"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></svg></a></li>
+              <li><a href="https://tiktok.com/@fixcellgt" target="_blank" rel="noopener" aria-label="TikTok de FixCellGt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M15 3c.3 2.4 2 4.2 4.5 4.4"/></svg></a></li>
+              <li><a href="https://youtube.com/@fixcellgt" target="_blank" rel="noopener" aria-label="YouTube de FixCellGt"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><path d="M9.75 15.02 15.5 11.75 9.75 8.48z"/></svg></a></li>
+            </ul>
+          </dd></div>
         </dl>
       </div>
       <form class="form reveal" style="--d:.15s" onsubmit="handleFormSubmit(event)">
