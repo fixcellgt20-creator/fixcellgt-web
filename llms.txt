@@ -1,0 +1,36 @@
+# FixCellGt
+
+> Reparación de celulares, computadoras, tablets y consolas en San José Pinula, Zona 1, con garantía. Venta e instalación de cámaras CCTV WiFi.
+
+## Datos del negocio
+
+- Dirección: 1ra Calle 4-57, Zona 1, San José Pinula, Guatemala
+- Teléfono y WhatsApp: 5421-3113 (https://wa.me/50254213113)
+- Horario: lunes a sábado, de 9:00 a 19:00
+
+## Servicios
+
+- Reparación de smartphones iPhone y Android: pantalla, batería, cámara y software
+- Reparación de laptops y computadoras de escritorio, cambio de SSD y RAM
+- Reparación de consolas Xbox, PlayStation y Nintendo, controles y accesorios
+- Reparación de tablets
+- Reparación de impresoras, escáneres y otros periféricos
+- Mantenimiento preventivo y limpieza térmica
+
+## Cámaras de seguridad
+
+- Venta e instalación de cámaras CCTV WiFi, marcas Hikvision, Dahua e Imou.
+- Visita y cotización sin costo en San José Pinula y alrededores.
+- La instalación se cotiza aparte.
+- 60 días de garantía en las cámaras.
+
+## Enlaces
+
+- [Sitio web](https://fixcellgt.vercel.app/)
+- [Tienda en línea](https://tienda.fixcellgt.com)
+- [Rastrear una orden de reparación](https://fixcellgt-sigma.vercel.app/rastreo/fixcellgt)
+- [Política de privacidad](https://fixcellgt.vercel.app/privacidad.html)
+- [Facebook](https://facebook.com/fixcellgt)
+- [Instagram](https://instagram.com/fixcellgt)
+- [TikTok](https://tiktok.com/@fixcellgt)
+- [YouTube](https://www.youtube.com/@fixcellgt4574)
